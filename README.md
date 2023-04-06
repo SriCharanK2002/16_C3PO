@@ -3,7 +3,7 @@
 The blockchain-based platform for creative professionals would provide several features to address the pain points faced by the creative industry. One of the critical features of the platform is the use of smart contracts, which would automate several processes, such as payment, copyright, and ownership management.
 
 
-A blockchain-based platform for creative professionals to help their work to wider world.
+<b>A blockchain-based platform for creative professionals to help their work to wider world.</b>
 
 The platform addresses quite a few pain points faced by creative professionals in the present-day creative industry such as Low Pay or Pay disparity, lack of recognition. Thus, one of the key features of this platform is the use of smart contracts, which in turn automate several processes, such as payment, copyright and ownership management. 
 
