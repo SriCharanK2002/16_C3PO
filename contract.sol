@@ -23,8 +23,8 @@ contract ArtPlatform {
         uint price;
         bool isSold;
     }
-     uint public projectCount;
     
+    uint public projectCount;
     event ProjectCreated(uint id, string name, string description, address payable artist, uint price);
     event ProjectPurchased(uint id, string name, address payable buyer, uint price);
     
@@ -45,7 +45,6 @@ contract ArtPlatform {
         projects[projectCount] = Project(projectCount, _name, _description, payable(msg.sender),payable(msg.sender), _price, false);//making owner as artist
         emit ProjectCreated(projectCount, _name, _description, payable(msg.sender), _price);
     }
-
     function purchaseProject(uint _id) public payable {
         Project memory _project = projects[_id];
         require(_project.id > 0 && _project.id <= projectCount, "Invalid project id.");
@@ -68,5 +67,5 @@ contract ArtPlatform {
     
     function returnProj(uint _id) public view returns(Project memory project1 ) {
         project1 = projects[_id];
-    }
+        }
 }
