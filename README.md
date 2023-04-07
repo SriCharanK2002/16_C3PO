@@ -1,6 +1,6 @@
 # ChainForge
 
-The blockchain-based platform for creative professionals would provide several features to address the pain points faced by the creative industry. One of the critical features of the platform is the use of smart contracts, which would automate several processes, such as payment, copyright, and ownership management.
+A blockchain-based platform for creative professionals that would provide several features to address the pain points faced by the creative industry. One of the critical features of the platform is the use of smart contracts, which would automate several processes, such as payment, copyright, and ownership management.
 
 
 <b>A blockchain-based platform for creative professionals to help their work to wider world.</b>
