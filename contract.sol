@@ -26,8 +26,17 @@ contract ArtPlatform {
         address payable owner;
         uint price;
     }
+    
     uint public projectCount;
     uint public OrderCount;
+    function isRegistered(uint _id) public view returns (bool){
+        if(_id<user_count){
+            return true;
+        }
+        return false;
+
+
+    }
     
     
     event ProjectCreated(uint id, string name, string description, address payable artist, uint price);
@@ -40,7 +49,7 @@ contract ArtPlatform {
         OrderCount=0;
     }
     
-    function register(string memory _name) public {
+    function register(string memory _name) payable public {
         require(users[msg.sender].wallet == address(0), "User already registered.");
         uint _id = user_count++;
         users[msg.sender] = User(_id, _name, payable(msg.sender));
@@ -53,6 +62,7 @@ contract ArtPlatform {
         emit ProjectCreated(projectCount, _name, _description, payable(msg.sender), _price);
         userProjects[msg.sender].push(projectCount);
     }
+    
     function purchaseProject(uint _id) public payable {
         Project memory _project = projects[_id];
         require(_project.id > 0 && _project.id <= projectCount, "Invalid project id.");
@@ -78,7 +88,8 @@ contract ArtPlatform {
                 break;
             }
         }
-    // userProjects[ _project.owner].delete(_id);
+    
+        // userProjects[ _project.owner].delete(_id);
         
         
         // users[_project.artist].wallet.transfer(_project.price);
@@ -106,8 +117,8 @@ contract ArtPlatform {
         // bool approvedC;             // Whether the project is completed or not
         // bool approvedB;
         // mapping(address => bool) hasSubmitted;  // Mapping of creative professionals who have submitted work for the project
-        uint256 submissionTime;   // Mapping of the submission time for each creative professional
-         // mapping(address => uint256) submissionIndex;  // Mapping of the submission index for each creative professional
+        uint256 submissionTime;  // Mapping of the submission time for each creative professional
+        // mapping(address => uint256) submissionIndex;  // Mapping of the submission index for each creative professional
         // mapping(uint256 => address) submissions;      // Mapping of the creative professional address for each submission
         uint256 submissionCount;    // The number of submissions for the project
         address payable selectedProfessional;  // The address of the professional selected by the client to complete the project
@@ -154,6 +165,9 @@ contract ArtPlatform {
         orders[_id].flags[3]=true;
         
         emit ApprovedAndCompleted(_id);
+
+
     }
 
+    
 }
