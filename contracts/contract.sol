@@ -12,11 +12,78 @@ contract ArtPlatform {
         string name;
         address payable wallet;
         // mapping (address => Project) i_own;
+        uint rating;
     }
-    
+    //G & S
+    function getUserId(address _address) public view returns (uint) {
+        return users[_address].id;
+    }
+
+    // function setUserId(address _address, uint _id) public {
+    //     users[_address].id = _id;
+    // }
+
+    function getUserName(address _address) public view returns (string memory) {
+        return users[_address].name;
+    }
+
+    function setUserName(address _address, string memory _name) public {
+        users[_address].name = _name;
+    }
+
+    function getUserWallet(address _address) public view returns (address payable) {
+        return users[_address].wallet;
+    }
+
+    // function setUserWallet(address _address, address payable _wallet) public {
+    //     users[_address].wallet = _wallet;
+    // }
+
+    function getUserRating(address _address) public view returns (uint) {
+        return users[_address].rating;
+    }
+
+    function setUserRating(address _address, bool k) public {
+        if (k==true){users[_address].rating = users[_address].rating+1;
+        return;}
+        users[_address].rating = users[_address].rating-1;
+
+        
+    }
+
+
+
+
+
+
+    mapping (uint => Order) public orders;
+    mapping(address => uint[]) public userOrders;
     mapping (address => User) public users;
     mapping (uint => Project) public projects;
     mapping(address => uint[]) public userProjects;
+
+    function getOrder(uint orderId) public view returns (Order memory) {
+        return orders[orderId];
+    }
+
+    function getUserOrders(address userAddress) public view returns (uint[] memory) {
+        return userOrders[userAddress];
+    }
+
+    function getUser(address userAddress) public view returns (User memory) {
+        return users[userAddress];
+    }
+
+    function getProject(uint projectId) public view returns (Project memory) {
+        return projects[projectId];
+    }
+
+    function getUserProjects(address userAddress) public view returns (uint[] memory) {
+        return userProjects[userAddress];
+    }
+
+
+
 
     struct Project {
         uint id;
@@ -25,6 +92,7 @@ contract ArtPlatform {
         address payable artist;
         address payable owner;
         uint price;
+        uint256 publishtime;
     }
     
     uint public projectCount;
@@ -39,7 +107,7 @@ contract ArtPlatform {
     }
     
     
-    event ProjectCreated(uint id, string name, string description, address payable artist, uint price);
+    event ProjectCreated(uint id, string name, string description, address payable artist, uint price,uint256 timestamp);
     event ProjectPurchased(uint id, string name, address payable buyer, uint price);
     
     constructor() {
@@ -52,14 +120,14 @@ contract ArtPlatform {
     function register(string memory _name) payable public {
         require(users[msg.sender].wallet == address(0), "User already registered.");
         uint _id = user_count++;
-        users[msg.sender] = User(_id, _name, payable(msg.sender));
+        users[msg.sender] = User(_id, _name, payable(msg.sender),50);
     }
     
     function createProject(string memory _name, string memory _description, uint _price) public {
         require(users[msg.sender].wallet != address(0), "User not registered.");
         projectCount++;
-        projects[projectCount] = Project(projectCount, _name, _description, payable(msg.sender),payable(msg.sender), _price);//making owner as artist
-        emit ProjectCreated(projectCount, _name, _description, payable(msg.sender), _price);
+        projects[projectCount] = Project(projectCount, _name, _description, payable(msg.sender),payable(msg.sender), _price,block.timestamp);//making owner as artist
+        emit ProjectCreated(projectCount, _name, _description, payable(msg.sender), _price,block.timestamp);
         userProjects[msg.sender].push(projectCount);
     }
     
@@ -77,14 +145,15 @@ contract ArtPlatform {
 
         uint256[] storage values = userProjects[_project.owner];
 
-        for (uint256 i = 0; i < values.length; i++) {
+        for (uint256 i = 1; i < values.length; i++) {
             if (values[i] == _id) {
                 // Shift all elements after the one we want to remove
                 for (uint256 j = i; j < values.length - 1; j++) {
-                    values[j] = values[j+1];
+                    userProjects[_project.owner][j] = userProjects[_project.owner][j+1];
                 }
+                // userProjects[_project.owner].splice();
                 // Remove the last element of the array
-                values.pop();
+                userProjects[_project.owner].pop();
                 break;
             }
         }
@@ -125,8 +194,7 @@ contract ArtPlatform {
         // bool paid;
         bool[4] flags;//[ isSubmitted,   approvedC;  approvedB;  paid;]           // Whether the client has paid the professional or not
     }
-    mapping (uint => Order) public orders;
-    mapping(address => uint[]) public userOrders;
+    
 
     event OrderPlaced(uint id, string name, string description, address payable buyer,address payable artist, uint budget);
     // event OrderClosed(uint id, string name, address payable buyer, uint price);
@@ -169,5 +237,34 @@ contract ArtPlatform {
 
     }
 
-    
-}
+    event copyrightProtected();
+    function copyrightClaim(uint Claimer_ProjectID,uint Disputee_ProjectID) public {
+        require(users[msg.sender].wallet != address(0), "User not registered.");
+        require( Claimer_ProjectID!=Disputee_ProjectID, "Your project does not exist");
+        require( Claimer_ProjectID<=projectCount && Claimer_ProjectID>0, "Your project does not exist");
+        require( Disputee_ProjectID<=projectCount && Disputee_ProjectID>0, "Infrinnger's project does not exist");
+        require( projects[ Claimer_ProjectID].owner==msg.sender, "This is not your project");
+        //projects[Claimer_ProjectID].publishtime<projects[Disputee_ProjectID].publishtime
+        if (Claimer_ProjectID<Disputee_ProjectID){
+            // Project memory _project = projects[ Disputee_ProjectID];
+            
+            // uint256[] storage values = userProjects[_project.owner];
+            projects[ Disputee_ProjectID].owner=payable(admin);
+            //  userProjects[_project.owner]{'','',0};
+
+            // for (uint256 i = 1; i <= values.length; i++) {
+            //     if (values[i] == Disputee_ProjectID) {
+            //     // Shift all elements after the one we want to remove
+            //         // for (uint256 j = i; j < values.length - 1; j++) {
+            //         // values[j] = values[j+1];
+            //         // }
+            //     values[i]=0;
+            //     // Remove the last element of the array
+                    // values.pop();
+                    emit copyrightProtected();
+                   
+                }
+            }
+        
+        
+        }
