@@ -12,7 +12,7 @@
  * --------------------------------
  *
  * Do you have a complex application that requires lots of transactions to deploy?
- * Use this approach to make deployment a breeze 🏖️:
+ * Use this approach to make deployment a breeze 🏖:
  *
  * Infura deployment needs a wallet provider (like @truffle/hdwallet-provider)
  * to sign transactions before they're sent to a remote public node.
@@ -56,19 +56,19 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
-
+  
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache, geth, or parity) in a separate terminal
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
-    // options below to some value.
+    // options below to some vsalue.
     //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
+    development: {
+     host: "127.0.0.1",     // Localhost (default: none)
+     port: 7545,            // Standard Ethereum port (default: none)
+     network_id: "5777",       // Any network (default: none)
+    },
     //
     // An additional network, but with some advanced options…
     // advanced: {
